@@ -1,0 +1,77 @@
+#!/bin/bash
+# To make a bash script executable, do:
+# ~$ chmod +x <script_name>
+# And then just execute it like ./<script_name>
+# Script written by Constantine M. Apostolou
+
+echo "Compilation started"
+sleep 0.5
+
+echo "  Assembling kernel loader"
+echo "  --> start.asm"
+nasm -felf -o loader.o start.asm
+echo "  --> gdt.s"
+nasm -felf -o gdt.o gdt.s
+echo "  --> interrupt.s"
+nasm -felf -o interrupt.o interrupt.s
+echo "  --> process.s"
+nasm -felf -o process.o process.s
+echo "  Done."
+
+echo "  Compiling kernel"
+echo "  --> main.c"
+gcc -o kernel.o -c main.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> port/outb.c"
+gcc -o outb.o -c port/outb.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> port/inpb.c"
+gcc -o inpb.o -c port/inpb.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> port/inpw.c"
+gcc -o inpw.o -c port/inpw.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> screen/screen.c"
+gcc -o screen.o -c screen/screen.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> screen/ctype.c"
+gcc -o ctype.o -c screen/ctype.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> screen/printf.c"
+gcc -o printf.o -c screen/printf.c -nostdlib -nostdinc -fno-builtin
+
+echo "  --> screen/stdio.c"
+gcc -o stdio.o -c screen/stdio.c -nostdlib -nostdinc -fno-builtin
+
+echo "  --> screen/stdlib.c"
+gcc -o stdlib.o -c screen/stdlib.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> screen/string.c"
+gcc -o string.o -c screen/string.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> string/strlen.c"
+gcc -o strlen.o -c string/strlen.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> string/strcpy.c"
+gcc -o strcpy.o -c string/strcpy.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> string/strcmp.c"
+gcc -o strcmp.o -c string/strcmp.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> string/strcat.c"
+gcc -o strcat.o -c string/strcat.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> string/memset.c"
+gcc -o memset.o -c string/memset.c  -nostdlib -nostdinc -fno-builtin
+
+echo "  --> string/memcpy.c"
+gcc -o memcpy.o -c string/memcpy.c  -nostdlib -nostdinc -fno-builtin
+# TODO: Put the rest of the modules that need to be 
+#       be compiled here.
+echo "  Done."
+echo "Done."
+
+echo "Linking the object code"
+ld -T linker.ld -o kernel loader.o kernel.o screen.o inpb.o inpw.o outb.o string.o stdlib.o ctype.o stdio.o \
+strcpy.o strlen.o strcmp.o strcat.o memset.o memcpy.o
+echo "Done."

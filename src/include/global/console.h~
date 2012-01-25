@@ -1,0 +1,9 @@
+#ifndef CONSOLE_H
+#define CONSOLE_H
+
+enum
+{
+  CONSOLE_OP_WRITEXY = 2376
+};
+
+#endif

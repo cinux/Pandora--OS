@@ -1,0 +1,10 @@
+#ifndef NT_HEADER_H
+#define NT_HEADER_H
+
+#include "clr.h"
+#include "clr_md_cstr.h"
+#include "md_mdef_table.h"
+#include "md_str_table.h"
+#include "pe32exeh.h"
+
+#endif
